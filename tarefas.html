@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ---------------------- bootstrap -------------------- -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous" defer></script>
+
+  <!-- ----------------------------- estilos CSS ----------------------------- -->
+  <link rel="stylesheet" href="./styles/tarefas.css">
+  <link rel="stylesheet" href="./styles/skeleton.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <!-- ------------------- Biblioteca de icones - Fontawesome -------------------- -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- ----------------------------- sweet alert ----------------------------- -->
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- CDN example (unpkg) -->
+  <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <!-- ---------------------- lógica aplicada nas tarefas ----------------------- -->
+  <script src="./scripts/utils/api-elements.js" defer></script>
+  <script src="./scripts/utils/validation.js" defer></script>
+  <script src="./animations/skeleton.js" defer></script>
+  <script src="./animations/spinner.js" defer></script>
+  <script src="./scripts/tasks/handle_task.js" defer></script>
+  <script src="./scripts/tasks/tasks.js" defer></script>
+  
+  <!-- ---------------------- sweetalert.js ----------------------- -->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+  <title>To-Do App</title>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <a href="#">Tarefas</a>
+    </nav>
+
+    <div class="user-info">
+      <p id="nomeUsuario"></p>
+      <div class="user-image"><img src="" id="user-image"></div>
+      <p id="closeApp" data-bs-toggle="modal" data-bs-target="#logout">Finalizar sessão</p>
+    </div>
+  </header>
+
+
+  <form class="nova-tarefa">
+    <div class="not-done"></div>
+    <input id="novaTarefa" type="text" placeholder="Nova tarefa">
+    <button id="botaoNovaTarefa" class="button-blocked" type="submit" disabled>
+      <img id="imagemBotaoNovaTarefa" src="./assets/plus.png" alt="Adicionar uma nova tarefa">
+    </button>
+  </form>
+
+  <h2 class="titulo-pendentes">Tarefas pendentes</h2>
+  <ul class="tarefas-pendentes">
+    <!-- <div class="skeleton"> -->
+
+  </ul>
+
+  <h2 class="titulo-terminadas">Tarefas terminadas</h2>
+  <ul class="tarefas-terminadas">
+
+  </ul>
+
+  <!-- Pop up para sucesso na criação da tarefa -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toastSuccessCreateTask" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex text-bg-primary border-0">
+        <div class="toast-body">
+          Tarefa criada com sucesso!
+        </div>
+          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>  
+  </div>
+
+  <!-- Pop up para sucesso na alteração da tarefa -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toastSuccessEditTask" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex text-bg-primary border-0">
+        <div class="toast-body">
+          Tarefa alterada com sucesso!
+        </div>
+          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>  
+  </div>
+
+  <!-- Pop up para sucesso na exclusão da tarefa -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toastSuccessDeleteTask" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex text-bg-primary border-0">
+        <div class="toast-body">
+          Tarefa excluída com sucesso!
+        </div>
+          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>  
+  </div>
+
+  <!-- Pop up para fracassos -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toastFail" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex text-bg-danger border-0">
+        <div class="toast-body">
+          Algo deu errado. Tente novamente!
+        </div>
+          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>  
+  </div>
+
+  <!-- Modal para logout -->
+  <div class="modal fade" id="logout" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!-- <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5> -->
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Você realmente deseja sair?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+          <button type="button" class="btn btn-danger" onclick="logOut()">Sim</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
